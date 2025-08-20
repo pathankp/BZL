@@ -17,7 +17,7 @@ export const Home = memo(() => {
 	const { t } = useLingui()
 
 	useEffect(() => {
-		document.title = t`Dashboard` + " / Beszel"
+		document.title = t`Dashboard` + " / ServerSentry"
 	}, [t])
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ export const Home = memo(() => {
 
 				<div className="flex gap-1.5 justify-end items-center pe-3 sm:pe-6 mt-3.5 text-xs opacity-80">
 					<a
-						href="https://github.com/henrygd/beszel"
+						href="https://github.com/nak-ventures/serversentry"
 						target="_blank"
 						className="flex items-center gap-0.5 text-muted-foreground hover:text-foreground duration-75"
 					>
@@ -51,11 +51,11 @@ export const Home = memo(() => {
 					</a>
 					<Separator orientation="vertical" className="h-2.5 bg-muted-foreground opacity-70" />
 					<a
-						href="https://github.com/henrygd/beszel/releases"
+						href="https://github.com/nak-ventures/serversentry/releases"
 						target="_blank"
 						className="text-muted-foreground hover:text-foreground duration-75"
 					>
-						Beszel {globalThis.BESZEL.HUB_VERSION}
+						ServerSentry {globalThis.SERVERSENTRY.HUB_VERSION}
 					</a>
 				</div>
 			</>
