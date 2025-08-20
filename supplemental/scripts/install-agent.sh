@@ -19,8 +19,8 @@ set_selinux_context() {
       # First try to set persistent context if semanage is available
       if command -v semanage >/dev/null 2>&1; then
         echo "Attempting to set persistent SELinux context..."
-        if semanage fcontext -a -t bin_t "/opt/beszel-agent/beszel-agent" >/dev/null 2>&1; then
-          restorecon -v /opt/beszel-agent/beszel-agent >/dev/null 2>&1
+        if semanage fcontext -a -t bin_t "/opt/serversentry-agent/serversentry-agent" >/dev/null 2>&1; then
+          restorecon -v /opt/serversentry-agent/serversentry-agent >/dev/null 2>&1
         else
           echo "Warning: Failed to set persistent context, falling back to temporary context."
         fi
@@ -29,8 +29,8 @@ set_selinux_context() {
       # Fall back to chcon if semanage failed or isn't available
       if command -v chcon >/dev/null 2>&1; then
         # Set context for both the directory and binary
-        chcon -t bin_t /opt/beszel-agent/beszel-agent || echo "Warning: Failed to set SELinux context for binary."
-        chcon -R -t bin_t /opt/beszel-agent || echo "Warning: Failed to set SELinux context for directory."
+        chcon -t bin_t /opt/serversentry-agent/serversentry-agent || echo "Warning: Failed to set SELinux context for binary."
+        chcon -R -t bin_t /opt/serversentry-agent || echo "Warning: Failed to set SELinux context for directory."
       else
         if [ "$SELINUX_MODE" = "Enforcing" ]; then
           echo "Warning: SELinux is in enforcing mode but chcon command not found. The service may fail to start."
@@ -49,7 +49,7 @@ cleanup_selinux_context() {
     echo "Cleaning up SELinux contexts..."
     # Remove persistent context if semanage is available
     if command -v semanage >/dev/null 2>&1; then
-      semanage fcontext -d "/opt/beszel-agent/beszel-agent" 2>/dev/null || true
+      semanage fcontext -d "/opt/serversentry-agent/serversentry-agent" 2>/dev/null || true
     fi
   fi
 }
@@ -81,7 +81,7 @@ VERSION="latest"
 # Check for help flag
 case "$1" in
 -h | --help)
-  printf "Beszel Agent installation script\n\n"
+  printf "ServerSentry Agent installation script\n\n"
   printf "Usage: ./install-agent.sh [options]\n\n"
   printf "Options: \n"
   printf "  -k                    : SSH key (required, or interactive if not provided)\n"
@@ -89,11 +89,11 @@ case "$1" in
   printf "  -t                    : Token (optional for backwards compatibility)\n"
   printf "  -url                  : Hub URL (optional for backwards compatibility)\n"
   printf "  -v, --version         : Version to install (default: latest)\n"
-  printf "  -u                    : Uninstall Beszel Agent\n"
+  printf "  -u                    : Uninstall ServerSentry Agent\n"
   printf "  --auto-update [VALUE] : Control automatic daily updates\n"
   printf "                          VALUE can be true (enable) or false (disable). If not specified, will prompt.\n"
   printf "  --china-mirrors [URL] : Use GitHub proxy to resolve network timeout issues in mainland China\n"
-  printf "                          URL: optional custom proxy URL (default: https://gh.beszel.dev)\n"
+  printf "                          URL: optional custom proxy URL (default: https://gh.serversentry.dev)\n"
   printf "  -h, --help            : Display this help message\n"
   exit 0
   ;;
@@ -160,7 +160,7 @@ while [ $# -gt 0 ]; do
         GITHUB_PROXY_URL="$CUSTOM_PROXY"
         GITHUB_URL="$(ensure_trailing_slash "$CUSTOM_PROXY")https://github.com"
       else
-        GITHUB_PROXY_URL="https://gh.beszel.dev"
+        GITHUB_PROXY_URL="https://gh.serversentry.dev"
         GITHUB_URL="$GITHUB_PROXY_URL"
       fi
     elif [ "$2" != "" ] && ! echo "$2" | grep -q '^-'; then
@@ -170,7 +170,7 @@ while [ $# -gt 0 ]; do
       shift
     else
       # No value specified, use default
-      GITHUB_PROXY_URL="https://gh.beszel.dev"
+      GITHUB_PROXY_URL="https://gh.serversentry.dev"
       GITHUB_URL="$GITHUB_PROXY_URL"
     fi
     ;;
@@ -210,69 +210,69 @@ if [ "$UNINSTALL" = true ]; then
 
   if is_alpine; then
     echo "Stopping and disabling the agent service..."
-    rc-service beszel-agent stop
-    rc-update del beszel-agent default
+    rc-service serversentry-agent stop
+    rc-update del serversentry-agent default
 
     echo "Removing the OpenRC service files..."
-    rm -f /etc/init.d/beszel-agent
+    rm -f /etc/init.d/serversentry-agent
 
     # Remove the update service if it exists
     echo "Removing the daily update service..."
-    rc-service beszel-agent-update stop 2>/dev/null
-    rc-update del beszel-agent-update default 2>/dev/null
-    rm -f /etc/init.d/beszel-agent-update
+    rc-service serversentry-agent-update stop 2>/dev/null
+    rc-update del serversentry-agent-update default 2>/dev/null
+    rm -f /etc/init.d/serversentry-agent-update
 
     # Remove log files
     echo "Removing log files..."
-    rm -f /var/log/beszel-agent.log /var/log/beszel-agent.err
+    rm -f /var/log/serversentry-agent.log /var/log/serversentry-agent.err
   elif is_openwrt; then
     echo "Stopping and disabling the agent service..."
-    /etc/init.d/beszel-agent stop
-    /etc/init.d/beszel-agent disable
+    /etc/init.d/serversentry-agent stop
+    /etc/init.d/serversentry-agent disable
 
     echo "Removing the OpenWRT service files..."
-    rm -f /etc/init.d/beszel-agent
+    rm -f /etc/init.d/serversentry-agent
 
     # Remove the update service if it exists
     echo "Removing the daily update service..."
-    rm -f /etc/crontabs/beszel
+    rm -f /etc/crontabs/serversentry
 
   else
     echo "Stopping and disabling the agent service..."
-    systemctl stop beszel-agent.service
-    systemctl disable beszel-agent.service
+    systemctl stop serversentry-agent.service
+    systemctl disable serversentry-agent.service
 
     echo "Removing the systemd service file..."
-    rm /etc/systemd/system/beszel-agent.service
+    rm /etc/systemd/system/serversentry-agent.service
 
     # Remove the update timer and service if they exist
     echo "Removing the daily update service and timer..."
-    systemctl stop beszel-agent-update.timer 2>/dev/null
-    systemctl disable beszel-agent-update.timer 2>/dev/null
-    rm -f /etc/systemd/system/beszel-agent-update.service
-    rm -f /etc/systemd/system/beszel-agent-update.timer
+    systemctl stop serversentry-agent-update.timer 2>/dev/null
+    systemctl disable serversentry-agent-update.timer 2>/dev/null
+    rm -f /etc/systemd/system/serversentry-agent-update.service
+    rm -f /etc/systemd/system/serversentry-agent-update.timer
 
     systemctl daemon-reload
   fi
 
-  echo "Removing the Beszel Agent directory..."
-  rm -rf /opt/beszel-agent
+  echo "Removing the ServerSentry Agent directory..."
+  rm -rf /opt/serversentry-agent
 
   echo "Removing the dedicated user for the agent service..."
-  killall beszel-agent 2>/dev/null
+  killall serversentry-agent 2>/dev/null
   if is_alpine || is_openwrt; then
-    deluser beszel 2>/dev/null
+    deluser serversentry 2>/dev/null
   else
-    userdel beszel 2>/dev/null
+    userdel serversentry 2>/dev/null
   fi
 
-  echo "Beszel Agent has been uninstalled successfully!"
+  echo "ServerSentry Agent has been uninstalled successfully!"
   exit 0
 fi
 
 # Confirm the use of GitHub mirrors for downloads
 if [ -n "$GITHUB_PROXY_URL" ]; then
-  printf "\nConfirm use of GitHub mirror (%s) for downloading beszel-agent?\nThis helps to install properly in mainland China. (Y/n): " "$GITHUB_PROXY_URL"
+  printf "\nConfirm use of GitHub mirror (%s) for downloading serversentry-agent?\nThis helps to install properly in mainland China. (Y/n): " "$GITHUB_PROXY_URL"
   read USE_MIRROR
   USE_MIRROR=${USE_MIRROR:-Y}
   if [ "$USE_MIRROR" = "Y" ] || [ "$USE_MIRROR" = "y" ]; then
@@ -335,75 +335,75 @@ else
 fi
 
 # Create a dedicated user for the service if it doesn't exist
-echo "Creating a dedicated user for the Beszel Agent service..."
+echo "Creating a dedicated user for the ServerSentry Agent service..."
 if is_alpine; then
-  if ! id -u beszel >/dev/null 2>&1; then
-    addgroup beszel
-    adduser -S -D -H -s /sbin/nologin -G beszel beszel
+  if ! id -u serversentry >/dev/null 2>&1; then
+    addgroup serversentry
+    adduser -S -D -H -s /sbin/nologin -G serversentry serversentry
   fi
   # Add the user to the docker group to allow access to the Docker socket if group docker exists
   if getent group docker; then
-    echo "Adding beszel to docker group"
-    usermod -aG docker beszel
+    echo "Adding serversentry to docker group"
+    usermod -aG docker serversentry
   fi
   
 elif is_openwrt; then
-  # Create beszel group first if it doesn't exist (check /etc/group directly)
-  if ! grep -q "^beszel:" /etc/group >/dev/null 2>&1; then
-    echo "beszel:x:999:" >> /etc/group
+  # Create serversentry group first if it doesn't exist (check /etc/group directly)
+  if ! grep -q "^serversentry:" /etc/group >/dev/null 2>&1; then
+    echo "serversentry:x:999:" >> /etc/group
   fi
   
-  # Create beszel user if it doesn't exist (double-check to prevent duplicates)
-  if ! id -u beszel >/dev/null 2>&1 && ! grep -q "^beszel:" /etc/passwd >/dev/null 2>&1; then
-    echo "beszel:x:999:999::/nonexistent:/bin/false" >> /etc/passwd
+  # Create serversentry user if it doesn't exist (double-check to prevent duplicates)
+  if ! id -u serversentry >/dev/null 2>&1 && ! grep -q "^serversentry:" /etc/passwd >/dev/null 2>&1; then
+    echo "serversentry:x:999:999::/nonexistent:/bin/false" >> /etc/passwd
   fi
   
   # Add the user to the docker group if docker group exists and user is not already in it
   if grep -q "^docker:" /etc/group >/dev/null 2>&1; then
-    echo "Adding beszel to docker group"
-    # Check if beszel is already in docker group
-    if ! grep "^docker:" /etc/group | grep -q "beszel"; then
-      # Add beszel to docker group by modifying /etc/group
+    echo "Adding serversentry to docker group"
+    # Check if serversentry is already in docker group
+    if ! grep "^docker:" /etc/group | grep -q "serversentry"; then
+      # Add serversentry to docker group by modifying /etc/group
       # Handle both cases: group with existing members and group without members
       if grep "^docker:" /etc/group | grep -q ":.*:.*$"; then
         # Group has existing members, append with comma
-        sed -i 's/^docker:\([^:]*:[^:]*:\)\(.*\)$/docker:\1\2,beszel/' /etc/group
+        sed -i 's/^docker:\([^:]*:[^:]*:\)\(.*\)$/docker:\1\2,serversentry/' /etc/group
       else
         # Group has no members, just append
-        sed -i 's/^docker:\([^:]*:[^:]*:\)$/docker:\1beszel/' /etc/group
+        sed -i 's/^docker:\([^:]*:[^:]*:\)$/docker:\1serversentry/' /etc/group
       fi
     fi
   fi
 
 else
-  if ! id -u beszel >/dev/null 2>&1; then
-    useradd --system --home-dir /nonexistent --shell /bin/false beszel
+  if ! id -u serversentry >/dev/null 2>&1; then
+    useradd --system --home-dir /nonexistent --shell /bin/false serversentry
   fi
   # Add the user to the docker group to allow access to the Docker socket if group docker exists
   if getent group docker; then
-    echo "Adding beszel to docker group"
-    usermod -aG docker beszel
+    echo "Adding serversentry to docker group"
+    usermod -aG docker serversentry
   fi
 fi
 
-# Create the directory for the Beszel Agent
-if [ ! -d "/opt/beszel-agent" ]; then
-  echo "Creating the directory for the Beszel Agent..."
-  mkdir -p /opt/beszel-agent
-  chown beszel:beszel /opt/beszel-agent
-  chmod 755 /opt/beszel-agent
+# Create the directory for the ServerSentry Agent
+if [ ! -d "/opt/serversentry-agent" ]; then
+  echo "Creating the directory for the ServerSentry Agent..."
+  mkdir -p /opt/serversentry-agent
+  chown serversentry:serversentry /opt/serversentry-agent
+  chmod 755 /opt/serversentry-agent
 fi
 
-# Download and install the Beszel Agent
+# Download and install the ServerSentry Agent
 echo "Downloading and installing the agent..."
 
 OS=$(uname -s | sed -e 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/')
 ARCH=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/armv6l/arm/' -e 's/armv7l/arm/' -e 's/aarch64/arm64/' -e 's/mips/mipsle/')
-FILE_NAME="beszel-agent_${OS}_${ARCH}.tar.gz"
+FILE_NAME="serversentry-agent_${OS}_${ARCH}.tar.gz"
 
 # Determine version to install
 if [ "$VERSION" = "latest" ]; then
-  INSTALL_VERSION=$(curl -s "$GITHUB_API_URL""/repos/henrygd/beszel/releases/latest" | grep -o '"tag_name": "v[^"]*"' | cut -d'"' -f4 | tr -d 'v')
+  INSTALL_VERSION=$(curl -s "$GITHUB_API_URL""/repos/nak-ventures/serversentry/releases/latest" | grep -o '"tag_name": "v[^"]*"' | cut -d'"' -f4 | tr -d 'v')
   if [ -z "$INSTALL_VERSION" ]; then
     echo "Failed to get latest version"
     exit 1
@@ -419,14 +419,14 @@ echo "Downloading and installing agent version ${INSTALL_VERSION} from ${GITHUB_
 # Download checksums file
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR" || exit 1
-CHECKSUM=$(curl -sL "$GITHUB_URL/henrygd/beszel/releases/download/v${INSTALL_VERSION}/beszel_${INSTALL_VERSION}_checksums.txt" | grep "$FILE_NAME" | cut -d' ' -f1)
+CHECKSUM=$(curl -sL "$GITHUB_URL/nak-ventures/serversentry/releases/download/v${INSTALL_VERSION}/serversentry_${INSTALL_VERSION}_checksums.txt" | grep "$FILE_NAME" | cut -d' ' -f1)
 if [ -z "$CHECKSUM" ] || ! echo "$CHECKSUM" | grep -qE "^[a-fA-F0-9]{64}$"; then
   echo "Failed to get checksum or invalid checksum format"
   exit 1
 fi
 
-if ! curl -#L "$GITHUB_URL/henrygd/beszel/releases/download/v${INSTALL_VERSION}/$FILE_NAME" -o "$FILE_NAME"; then
-  echo "Failed to download the agent from ""$GITHUB_URL/henrygd/beszel/releases/download/v${INSTALL_VERSION}/$FILE_NAME"
+if ! curl -#L "$GITHUB_URL/nak-ventures/serversentry/releases/download/v${INSTALL_VERSION}/$FILE_NAME" -o "$FILE_NAME"; then
+  echo "Failed to download the agent from ""$GITHUB_URL/nak-ventures/serversentry/releases/download/v${INSTALL_VERSION}/$FILE_NAME"
   rm -rf "$TEMP_DIR"
   exit 1
 fi
@@ -437,15 +437,15 @@ if [ "$($CHECK_CMD "$FILE_NAME" | cut -d' ' -f1)" != "$CHECKSUM" ]; then
   exit 1
 fi
 
-if ! tar -xzf "$FILE_NAME" beszel-agent; then
+if ! tar -xzf "$FILE_NAME" serversentry-agent; then
   echo "Failed to extract the agent"
   rm -rf "$TEMP_DIR"
   exit 1
 fi
 
-mv beszel-agent /opt/beszel-agent/beszel-agent
-chown beszel:beszel /opt/beszel-agent/beszel-agent
-chmod 755 /opt/beszel-agent/beszel-agent
+mv serversentry-agent /opt/serversentry-agent/serversentry-agent
+chown serversentry:serversentry /opt/serversentry-agent/serversentry-agent
+chmod 755 /opt/serversentry-agent/serversentry-agent
 
 # Set SELinux context if needed
 set_selinux_context
@@ -472,20 +472,20 @@ detect_nvidia_devices() {
 # Modify service installation part, add Alpine check before systemd service creation
 if is_alpine; then
   echo "Creating OpenRC service for Alpine Linux..."
-  cat >/etc/init.d/beszel-agent <<EOF
+  cat >/etc/init.d/serversentry-agent <<EOF
 #!/sbin/openrc-run
 
-name="beszel-agent"
-description="Beszel Agent Service"
-command="/opt/beszel-agent/beszel-agent"
-command_user="beszel"
+name="serversentry-agent"
+description="ServerSentry Agent Service"
+command="/opt/serversentry-agent/serversentry-agent"
+command_user="serversentry"
 command_background="yes"
 pidfile="/run/\${RC_SVCNAME}.pid"
-output_log="/var/log/beszel-agent.log"
-error_log="/var/log/beszel-agent.err"
+output_log="/var/log/serversentry-agent.log"
+error_log="/var/log/serversentry-agent.err"
 
 start_pre() {
-    checkpath -f -m 0644 -o beszel:beszel "\$output_log" "\$error_log"
+    checkpath -f -m 0644 -o serversentry:serversentry "\$output_log" "\$error_log"
 }
 
 export PORT="$PORT"
@@ -499,21 +499,21 @@ depend() {
 }
 EOF
 
-  chmod +x /etc/init.d/beszel-agent
-  rc-update add beszel-agent default
+  chmod +x /etc/init.d/serversentry-agent
+  rc-update add serversentry-agent default
 
   # Create log files with proper permissions
-  touch /var/log/beszel-agent.log /var/log/beszel-agent.err
-  chown beszel:beszel /var/log/beszel-agent.log /var/log/beszel-agent.err
+  touch /var/log/serversentry-agent.log /var/log/serversentry-agent.err
+  chown serversentry:serversentry /var/log/serversentry-agent.log /var/log/serversentry-agent.err
 
   # Start the service
-  rc-service beszel-agent restart
+  rc-service serversentry-agent restart
 
   # Check if service started successfully
   sleep 2
-  if ! rc-service beszel-agent status | grep -q "started"; then
-    echo "Error: The Beszel Agent service failed to start. Checking logs..."
-    tail -n 20 /var/log/beszel-agent.err
+  if ! rc-service serversentry-agent status | grep -q "started"; then
+    echo "Error: The ServerSentry Agent service failed to start. Checking logs..."
+    tail -n 20 /var/log/serversentry-agent.err
     exit 1
   fi
 
@@ -523,50 +523,50 @@ EOF
   elif [ "$AUTO_UPDATE_FLAG" = "false" ]; then
     AUTO_UPDATE="n"
   else
-    printf "\nWould you like to enable automatic daily updates for beszel-agent? (y/n): "
+    printf "\nWould you like to enable automatic daily updates for serversentry-agent? (y/n): "
     read AUTO_UPDATE
   fi
   case "$AUTO_UPDATE" in
   [Yy]*)
-    echo "Setting up daily automatic updates for beszel-agent..."
+    echo "Setting up daily automatic updates for serversentry-agent..."
 
-    cat >/etc/init.d/beszel-agent-update <<EOF
+    cat >/etc/init.d/serversentry-agent-update <<EOF
 #!/sbin/openrc-run
 
-name="beszel-agent-update"
-description="Update beszel-agent if needed"
+name="serversentry-agent-update"
+description="Update serversentry-agent if needed"
 
 depend() {
-    need beszel-agent
+    need serversentry-agent
 }
 
 start() {
-    ebegin "Checking for beszel-agent updates"
-    if /opt/beszel-agent/beszel-agent update | grep -q "Successfully updated"; then
-        rc-service beszel-agent restart
+    ebegin "Checking for serversentry-agent updates"
+    if /opt/serversentry-agent/serversentry-agent update | grep -q "Successfully updated"; then
+        rc-service serversentry-agent restart
     fi
     eend $?
 }
 EOF
 
-    chmod +x /etc/init.d/beszel-agent-update
-    rc-update add beszel-agent-update default
-    rc-service beszel-agent-update start
+    chmod +x /etc/init.d/serversentry-agent-update
+    rc-update add serversentry-agent-update default
+    rc-service serversentry-agent-update start
 
     printf "\nAutomatic daily updates have been enabled.\n"
     ;;
   esac
 
   # Check service status
-  if ! rc-service beszel-agent status >/dev/null 2>&1; then
-    echo "Error: The Beszel Agent service is not running."
-    rc-service beszel-agent status
+  if ! rc-service serversentry-agent status >/dev/null 2>&1; then
+    echo "Error: The ServerSentry Agent service is not running."
+    rc-service serversentry-agent status
     exit 1
   fi
 
 elif is_openwrt; then
   echo "Creating procd init script service for OpenWRT..."
-  cat >/etc/init.d/beszel-agent <<EOF
+  cat >/etc/init.d/serversentry-agent <<EOF
 #!/bin/sh /etc/rc.common
 
 USE_PROCD=1
@@ -574,9 +574,9 @@ START=99
 
 start_service() {
     procd_open_instance
-    procd_set_param command /opt/beszel-agent/beszel-agent
-    procd_set_param user beszel
-    procd_set_param pidfile /var/run/beszel-agent.pid
+    procd_set_param command /opt/serversentry-agent/serversentry-agent
+    procd_set_param user serversentry
+    procd_set_param pidfile /var/run/serversentry-agent.pid
     procd_set_param env PORT="$PORT" KEY="$KEY" TOKEN="$TOKEN" HUB_URL="$HUB_URL"
     procd_set_param stdout 1
     procd_set_param stderr 1
@@ -584,15 +584,15 @@ start_service() {
 }
 
 stop_service() {
-    killall beszel-agent
+    killall serversentry-agent
 }
 
 # Extra command to trigger agent update
 EXTRA_COMMANDS="update"
-EXTRA_HELP="        update          Update the Beszel agent"
+EXTRA_HELP="        update          Update the ServerSentry agent"
 
 update() {
-    if /opt/beszel-agent/beszel-agent update | grep -q "Successfully updated"; then
+    if /opt/serversentry-agent/serversentry-agent update | grep -q "Successfully updated"; then
         start_service
     fi
 }
@@ -600,11 +600,11 @@ update() {
 EOF
 
   # Enable the service
-  chmod +x /etc/init.d/beszel-agent
-  /etc/init.d/beszel-agent enable
+  chmod +x /etc/init.d/serversentry-agent
+  /etc/init.d/serversentry-agent enable
 
   # Start the service
-  /etc/init.d/beszel-agent restart
+  /etc/init.d/serversentry-agent restart
 
   # Auto-update service for OpenWRT using a crontab job
   if [ "$AUTO_UPDATE_FLAG" = "true" ]; then
@@ -614,15 +614,15 @@ EOF
     AUTO_UPDATE="n"
     sleep 1 # give time for the service to start
   else
-    printf "\nWould you like to enable automatic daily updates for beszel-agent? (y/n): "
+    printf "\nWould you like to enable automatic daily updates for serversentry-agent? (y/n): "
     read AUTO_UPDATE
   fi
   case "$AUTO_UPDATE" in
   [Yy]*)
-    echo "Setting up daily automatic updates for beszel-agent..."
+    echo "Setting up daily automatic updates for serversentry-agent..."
 
-    cat >/etc/crontabs/beszel <<EOF
-0 0 * * * /etc/init.d/beszel-agent update
+    cat >/etc/crontabs/serversentry <<EOF
+0 0 * * * /etc/init.d/serversentry-agent update
 EOF
 
     /etc/init.d/cron restart
@@ -632,9 +632,9 @@ EOF
   esac
 
   # Check service status
-  if ! /etc/init.d/beszel-agent running >/dev/null 2>&1; then
-    echo "Error: The Beszel Agent service is not running."
-    /etc/init.d/beszel-agent status
+  if ! /etc/init.d/serversentry-agent running >/dev/null 2>&1; then
+    echo "Error: The ServerSentry Agent service is not running."
+    /etc/init.d/serversentry-agent status
     exit 1
   fi
 
@@ -645,9 +645,9 @@ else
   # Detect NVIDIA devices and grant device permissions
   NVIDIA_DEVICES=$(detect_nvidia_devices)
 
-  cat >/etc/systemd/system/beszel-agent.service <<EOF
+  cat >/etc/systemd/system/serversentry-agent.service <<EOF
 [Unit]
-Description=Beszel Agent Service
+Description=ServerSentry Agent Service
 Wants=network-online.target
 After=network-online.target
 
@@ -657,11 +657,11 @@ Environment="KEY=$KEY"
 Environment="TOKEN=$TOKEN"
 Environment="HUB_URL=$HUB_URL"
 # Environment="EXTRA_FILESYSTEMS=sdb"
-ExecStart=/opt/beszel-agent/beszel-agent
-User=beszel
+ExecStart=/opt/serversentry-agent/serversentry-agent
+User=serversentry
 Restart=on-failure
 RestartSec=5
-StateDirectory=beszel-agent
+StateDirectory=serversentry-agent
 
 # Security/sandboxing settings
 KeyringMode=private
@@ -684,29 +684,29 @@ EOF
   # Load and start the service
   printf "\nLoading and starting the agent service...\n"
   systemctl daemon-reload
-  systemctl enable beszel-agent.service
-  systemctl start beszel-agent.service
+  systemctl enable serversentry-agent.service
+  systemctl start serversentry-agent.service
 
   # Create the update script
   echo "Creating the update script..."
-  cat >/opt/beszel-agent/run-update.sh <<'EOF'
+  cat >/opt/serversentry-agent/run-update.sh <<'EOF'
 #!/bin/sh
 
 set -e
 
-if /opt/beszel-agent/beszel-agent update | grep -q "Successfully updated"; then
+if /opt/serversentry-agent/serversentry-agent update | grep -q "Successfully updated"; then
     echo "Update found, checking SELinux context."
     if command -v getenforce >/dev/null 2>&1 && [ "$(getenforce)" != "Disabled" ]; then
         echo "SELinux enabled, applying context..."
         if command -v chcon >/dev/null 2>&1; then
-            chcon -t bin_t /opt/beszel-agent/beszel-agent || echo "Warning: chcon command failed to apply context."
+            chcon -t bin_t /opt/serversentry-agent/serversentry-agent || echo "Warning: chcon command failed to apply context."
         fi
         if command -v restorecon >/dev/null 2>&1; then
-            restorecon -v /opt/beszel-agent/beszel-agent >/dev/null 2>&1 || echo "Warning: restorecon command failed to apply context."
+            restorecon -v /opt/serversentry-agent/serversentry-agent >/dev/null 2>&1 || echo "Warning: restorecon command failed to apply context."
         fi
     fi
-    echo "Restarting beszel-agent service..."
-    systemctl restart beszel-agent
+    echo "Restarting serversentry-agent service..."
+    systemctl restart serversentry-agent
     echo "Update process finished."
 else
     echo "No updates found or applied."
@@ -715,8 +715,8 @@ fi
 exit 0
 EOF
 
-  chown root:root /opt/beszel-agent/run-update.sh
-  chmod +x /opt/beszel-agent/run-update.sh
+  chown root:root /opt/serversentry-agent/run-update.sh
+  chmod +x /opt/serversentry-agent/run-update.sh
 
   # Prompt for auto-update setup
   if [ "$AUTO_UPDATE_FLAG" = "true" ]; then
@@ -726,28 +726,28 @@ EOF
     AUTO_UPDATE="n"
     sleep 1 # give time for the service to start
   else
-    printf "\nWould you like to enable automatic daily updates for beszel-agent? (y/n): "
+    printf "\nWould you like to enable automatic daily updates for serversentry-agent? (y/n): "
     read AUTO_UPDATE
   fi
   case "$AUTO_UPDATE" in
   [Yy]*)
-    echo "Setting up daily automatic updates for beszel-agent..."
+    echo "Setting up daily automatic updates for serversentry-agent..."
 
     # Create systemd service for the daily update
-    cat >/etc/systemd/system/beszel-agent-update.service <<EOF
+    cat >/etc/systemd/system/serversentry-agent-update.service <<EOF
 [Unit]
-Description=Update beszel-agent if needed
-Wants=beszel-agent.service
+Description=Update serversentry-agent if needed
+Wants=serversentry-agent.service
 
 [Service]
 Type=oneshot
-ExecStart=/opt/beszel-agent/run-update.sh
+ExecStart=/opt/serversentry-agent/run-update.sh
 EOF
 
     # Create systemd timer for the daily update
-    cat >/etc/systemd/system/beszel-agent-update.timer <<EOF
+    cat >/etc/systemd/system/serversentry-agent-update.timer <<EOF
 [Unit]
-Description=Run beszel-agent update daily
+Description=Run serversentry-agent update daily
 
 [Timer]
 OnCalendar=daily
@@ -759,18 +759,18 @@ WantedBy=timers.target
 EOF
 
     systemctl daemon-reload
-    systemctl enable --now beszel-agent-update.timer
+    systemctl enable --now serversentry-agent-update.timer
 
     printf "\nAutomatic daily updates have been enabled.\n"
     ;;
   esac
 
   # Wait for the service to start or fail
-  if [ "$(systemctl is-active beszel-agent.service)" != "active" ]; then
-    echo "Error: The Beszel Agent service is not running."
-    echo "$(systemctl status beszel-agent.service)"
+  if [ "$(systemctl is-active serversentry-agent.service)" != "active" ]; then
+    echo "Error: The ServerSentry Agent service is not running."
+    echo "$(systemctl status serversentry-agent.service)"
     exit 1
   fi
 fi
 
-printf "\n\033[32mBeszel Agent has been installed successfully! It is now running on port $PORT.\033[0m\n"
+printf "\n\033[32mServerSentry Agent has been installed successfully! It is now running on port $PORT.\033[0m\n"
