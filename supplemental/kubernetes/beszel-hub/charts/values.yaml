@@ -1,4 +1,4 @@
-# Default values for beszel-hub.
+# Default values for serversentry-hub.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,7 +6,7 @@
 replicaCount: 1
 
 image:
-  repository: henrygd/beszel
+  repository: nak-ventures/serversentry
   pullPolicy: IfNotPresent
   tag: ""
 
@@ -36,7 +36,7 @@ service:
 # -- Annotations for the DHCP service
   annotations:
     metallb.universe.tf/address-pool: pool
-    metallb.universe.tf/allow-shared-ip: beszel-hub-web
+    metallb.universe.tf/allow-shared-ip: serversentry-hub-web
   # -- Labels for the DHCP service
 
 ingress:
