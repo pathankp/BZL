@@ -6,7 +6,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
-"Project-Id-Version: \n"
+"Project-Id-Version: ServerSentry\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -113,13 +113,13 @@ msgstr "Agent"
 msgid "Alert History"
 msgstr "Alert History"
 
-#: src/components/alerts/alert-button.tsx
+#: src/components/alerts/alerts-dialog.tsx
 #: src/components/alerts/alert-button.tsx
 msgid "Alerts"
 msgstr "Alerts"
 
 #: src/components/systems-table/systems-table.tsx
-#: src/components/alerts/alert-button.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "All Systems"
 msgstr "All Systems"
 
@@ -143,8 +143,8 @@ msgstr "Average"
 msgid "Average CPU utilization of containers"
 msgstr "Average CPU utilization of containers"
 
-#. placeholder {0}: data.alert.unit
-#: src/components/alerts/alerts-system.tsx
+#. placeholder {0}: alertData.unit
+#: src/components/alerts/alerts-dialog.tsx
 msgid "Average exceeds <0>{value}{0}</0>"
 msgstr "Average exceeds <0>{value}{0}</0>"
 
@@ -477,7 +477,7 @@ msgstr "Failed to save settings"
 msgid "Failed to send test notification"
 msgstr "Failed to send test notification"
 
-#: src/components/alerts/alerts-system.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "Failed to update alert"
 msgstr "Failed to update alert"
 
@@ -491,7 +491,7 @@ msgstr "Filter..."
 msgid "Fingerprint"
 msgstr "Fingerprint"
 
-#: src/components/alerts/alerts-system.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "For <0>{min}</0> {min, plural, one {minute} other {minutes}}"
 msgstr "For <0>{min}</0> {min, plural, one {minute} other {minutes}}"
 
@@ -677,7 +677,7 @@ msgstr "Open menu"
 msgid "Or continue with"
 msgstr "Or continue with"
 
-#: src/components/alerts/alert-button.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "Overwrite existing alerts"
 msgstr "Overwrite existing alerts"
 
@@ -724,7 +724,7 @@ msgstr "Paused"
 msgid "Please <0>configure an SMTP server</0> to ensure alerts are delivered."
 msgstr "Please <0>configure an SMTP server</0> to ensure alerts are delivered."
 
-#: src/components/alerts/alerts-system.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "Please check logs for more details."
 msgstr "Please check logs for more details."
 
@@ -824,13 +824,21 @@ msgstr "Search"
 msgid "Search for systems or settings..."
 msgstr "Search for systems or settings..."
 
-#: src/components/alerts/alert-button.tsx
+#: src/components/alerts/alerts-dialog.tsx
 msgid "See <0>notification settings</0> to configure how you receive alerts."
 msgstr "See <0>notification settings</0> to configure how you receive alerts."
 
 #: src/components/routes/system.tsx
 msgid "Sent"
 msgstr "Sent"
+
+#: src/components/login/auth-form.tsx
+#~ msgid "ServerSentry supports OpenID Connect and many OAuth2 authentication providers."
+#~ msgstr "ServerSentry supports OpenID Connect and many OAuth2 authentication providers."
+
+#: src/components/routes/settings/notifications.tsx
+#~ msgid "ServerSentry uses <0>Shoutrrr</0> to integrate with popular notification services."
+#~ msgstr "ServerSentry uses <0>Shoutrrr</0> to integrate with popular notification services."
 
 #: src/components/routes/settings/general.tsx
 msgid "Set percentage thresholds for meter colors."
