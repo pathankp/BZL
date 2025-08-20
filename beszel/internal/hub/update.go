@@ -1,7 +1,7 @@
 package hub
 
 import (
-	"beszel"
+	"serversentry"
 	"fmt"
 	"os"
 	"strings"
@@ -11,18 +11,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Update updates beszel to the latest version
+// Update updates serversentry to the latest version
 func Update(_ *cobra.Command, _ []string) {
 	var latest *selfupdate.Release
 	var found bool
 	var err error
-	currentVersion := semver.MustParse(beszel.Version)
-	fmt.Println("beszel", currentVersion)
+	currentVersion := semver.MustParse(serversentry.Version)
+	fmt.Println("serversentry", currentVersion)
 	fmt.Println("Checking for updates...")
 	updater, _ := selfupdate.NewUpdater(selfupdate.Config{
-		Filters: []string{"beszel_"},
+		Filters: []string{"serversentry_"},
 	})
-	latest, found, err = updater.DetectLatest("henrygd/beszel")
+	latest, found, err = updater.DetectLatest("nak-ventures/serversentry")
 
 	if err != nil {
 		fmt.Println("Error checking for updates:", err)
