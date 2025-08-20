@@ -83,14 +83,14 @@ nfpms:
       interface, simple configuration, and is ready to use out of the box.
       It supports automatic backup, multi-user, OAuth authentication, and
       API access.
-    maintainer: henrygd <hank@henrygd.me>
+    maintainer: nak-ventures <oss@nak-ventures.com>
     section: net
     builds:
       - serversentry-agent
     formats:
       - deb
     contents:
-      - src: ../supplemental/debian/beszel-agent.service
+      - src: ../supplemental/debian/serversentry-agent.service
         dst: lib/systemd/system/serversentry-agent.service
         packager: deb
       - src: ../supplemental/debian/copyright
@@ -117,9 +117,9 @@ scoops:
   - ids: [serversentry-agent]
     name: serversentry-agent
     repository:
-      owner: henrygd
+      owner: nak-ventures
       name: serversentry-scoops
-    homepage: "https://beszel.dev"
+    homepage: "https://serversentry.dev"
     description: "Agent for ServerSentry, a lightweight server monitoring platform."
     license: MIT
 
@@ -127,32 +127,32 @@ scoops:
 # chocolateys:
 #   - title: ServerSentry Agent
 #     ids: [serversentry-agent]
-#     package_source_url: https://github.com/henrygd/beszel-chocolatey
-#     owners: henrygd
-#     authors: henrygd
+#     package_source_url: https://github.com/nak-ventures/serversentry-chocolatey
+#     owners: nak-ventures
+#     authors: nak-ventures
 #     summary: 'Agent for ServerSentry, a lightweight server monitoring platform.'
 #     description: |
 #       ServerSentry is a lightweight server monitoring platform that includes Docker statistics, historical data, and alert functions.
 
 #       It has a friendly web interface, simple configuration, and is ready to use out of the box. It supports automatic backup, multi-user, OAuth authentication, and API access.
-#     license_url: https://github.com/henrygd/beszel/blob/main/LICENSE
-#     project_url: https://beszel.dev
-#     project_source_url: https://github.com/henrygd/beszel
-#     docs_url: https://beszel.dev/guide/getting-started
-#     icon_url: https://cdn.jsdelivr.net/gh/selfhst/icons/png/beszel.png
-#     bug_tracker_url: https://github.com/henrygd/beszel/issues
-#     copyright: 2025 henrygd
+#     license_url: https://github.com/nak-ventures/serversentry/blob/main/LICENSE
+#     project_url: https://serversentry.dev
+#     project_source_url: https://github.com/nak-ventures/serversentry
+#     docs_url: https://serversentry.dev/guide/getting-started
+#     icon_url: https://cdn.jsdelivr.net/gh/nak-ventures/serversentry-icons/png/serversentry.png
+#     bug_tracker_url: https://github.com/nak-ventures/serversentry/issues
+#     copyright: 2025 nak-ventures
 #     tags: foss cross-platform admin monitoring
 #     require_license_acceptance: false
-#     release_notes: 'https://github.com/henrygd/beszel/releases/tag/v{{ .Version }}'
+#     release_notes: 'https://github.com/nak-ventures/serversentry/releases/tag/v{{ .Version }}'
 
 brews:
   - ids: [serversentry-agent]
     name: serversentry-agent
     repository:
-      owner: henrygd
+      owner: nak-ventures
       name: homebrew-serversentry
-    homepage: "https://beszel.dev"
+    homepage: "https://serversentry.dev"
     description: "Agent for ServerSentry, a lightweight server monitoring platform."
     license: MIT
     skip_upload: auto
@@ -160,8 +160,8 @@ brews:
       (bin/"serversentry-agent-launcher").write <<~EOS
         #!/bin/bash
         set -a
-        if [ -f "$HOME/.config/beszel/beszel-agent.env" ]; then
-          source "$HOME/.config/beszel/beszel-agent.env"
+        if [ -f "$HOME/.config/serversentry/serversentry-agent.env" ]; then
+          source "$HOME/.config/serversentry/serversentry-agent.env"
         fi
         set +a
         exec #{bin}/serversentry-agent "$@"
@@ -169,8 +169,8 @@ brews:
       (bin/"serversentry-agent-launcher").chmod 0755
     service: |
       run ["#{bin}/serversentry-agent-launcher"]
-      log_path "#{Dir.home}/.cache/beszel/beszel-agent.log"
-      error_log_path "#{Dir.home}/.cache/beszel/beszel-agent.log"
+      log_path "#{Dir.home}/.cache/serversentry/serversentry-agent.log"
+      error_log_path "#{Dir.home}/.cache/serversentry/serversentry-agent.log"
       keep_alive true
       restart_delay 5
       process_type :background
@@ -178,14 +178,14 @@ brews:
 winget:
   - ids: [serversentry-agent]
     name: serversentry-agent
-    package_identifier: henrygd.serversentry-agent
-    publisher: henrygd
+    package_identifier: nak-ventures.serversentry-agent
+    publisher: nak-ventures
     license: MIT
-    license_url: "https://github.com/henrygd/beszel/blob/main/LICENSE"
-    copyright: "2025 henrygd"
-    homepage: "https://beszel.dev"
-    release_notes_url: "https://github.com/henrygd/beszel/releases/tag/v{{ .Version }}"
-    publisher_support_url: "https://github.com/henrygd/beszel/issues"
+    license_url: "https://github.com/nak-ventures/serversentry/blob/main/LICENSE"
+    copyright: "2025 nak-ventures"
+    homepage: "https://serversentry.dev"
+    release_notes_url: "https://github.com/nak-ventures/serversentry/releases/tag/v{{ .Version }}"
+    publisher_support_url: "https://github.com/nak-ventures/serversentry/issues"
     short_description: "Agent for ServerSentry, a lightweight server monitoring platform."
     skip_upload: auto
     description: |
@@ -199,9 +199,9 @@ winget:
       - monitoring
       - self-hosted
     repository:
-      owner: henrygd
+      owner: nak-ventures
       name: serversentry-winget
-      branch: henrygd.serversentry-agent-{{ .Version }}
+      branch: nak-ventures.serversentry-agent-{{ .Version }}
       token: "{{ .Env.WINGET_TOKEN }}"
       # pull_request:
       #   enabled: true
