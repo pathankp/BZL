@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "beszel.fullname" . }}-web
+  name: {{ include "serversentry.fullname" . }}-web
   labels:
-    {{- include "beszel.labels" . | nindent 4 }}
+    {{- include "serversentry.labels" . | nindent 4 }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -19,4 +19,4 @@ spec:
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
   selector:
-    {{- include "beszel.selectorLabels" . | nindent 4 }}
+    {{- include "serversentry.selectorLabels" . | nindent 4 }}
