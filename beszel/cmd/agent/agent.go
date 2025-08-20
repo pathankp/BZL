@@ -1,9 +1,9 @@
 package main
 
 import (
-	"beszel"
-	"beszel/internal/agent"
-	"beszel/internal/agent/health"
+	"serversentry"
+	"serversentry/internal/agent"
+	"serversentry/internal/agent/health"
 	"flag"
 	"fmt"
 	"log"
@@ -46,7 +46,7 @@ func (opts *cmdOptions) parse() bool {
 
 	switch subcommand {
 	case "-v", "version":
-		fmt.Println(beszel.AppName+"-agent", beszel.Version)
+		fmt.Println(serversentry.AppName+"-agent", serversentry.Version)
 		return true
 	case "help":
 		flag.Usage()
@@ -82,7 +82,7 @@ func (opts *cmdOptions) loadPublicKeys() ([]ssh.PublicKey, error) {
 	// Try key file
 	keyFile, ok := agent.GetEnv("KEY_FILE")
 	if !ok {
-		return nil, fmt.Errorf("no key provided: must set -key flag, KEY env var, or KEY_FILE env var. Use 'beszel-agent help' for usage")
+		return nil, fmt.Errorf("no key provided: must set -key flag, KEY env var, or KEY_FILE env var. Use 'serversentry-agent help' for usage")
 	}
 
 	pubKey, err := os.ReadFile(keyFile)
