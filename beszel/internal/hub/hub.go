@@ -52,9 +52,9 @@ func NewHub(app core.App) *Hub {
 	return hub
 }
 
-// GetEnv retrieves an environment variable with a "BESZEL_HUB_" prefix, or falls back to the unprefixed key.
+// GetEnv retrieves an environment variable with a "SERVERSENTRY_HUB_" prefix, or falls back to the unprefixed key.
 func GetEnv(key string) (value string, exists bool) {
-	if value, exists = os.LookupEnv("BESZEL_HUB_" + key); exists {
+	if value, exists = os.LookupEnv("SERVERSENTRY_HUB_" + key); exists {
 		return value, exists
 	}
 	// Fallback to the old unprefixed key
@@ -164,7 +164,7 @@ func (h *Hub) initialize(e *core.ServeEvent) error {
 	return nil
 }
 
-// startServer sets up the server for Beszel
+// startServer sets up the server for ServerSentry
 func (h *Hub) startServer(se *core.ServeEvent) error {
 	// TODO: exclude dev server from production binary
 	switch h.IsDev() {
@@ -225,10 +225,10 @@ func (h *Hub) registerCronJobs(_ *core.ServeEvent) error {
 // custom api routes
 func (h *Hub) registerApiRoutes(se *core.ServeEvent) error {
 	// auth protected routes
-	apiAuth := se.Router.Group("/api/beszel")
+	apiAuth := se.Router.Group("/api/serversentry")
 	apiAuth.Bind(apis.RequireAuth())
 	// auth optional routes
-	apiNoAuth := se.Router.Group("/api/beszel")
+	apiNoAuth := se.Router.Group("/api/serversentry")
 
 	// create first user endpoint only needed if no users exist
 	if totalUsers, _ := se.App.CountRecords("users"); totalUsers == 0 {

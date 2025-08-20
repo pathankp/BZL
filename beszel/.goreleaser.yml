@@ -1,14 +1,14 @@
 version: 2
 
-project_name: beszel
+project_name: serversentry
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: beszel
-    binary: beszel
+  - id: serversentry
+    binary: serversentry
     main: cmd/hub/hub.go
     env:
       - CGO_ENABLED=0
@@ -20,8 +20,8 @@ builds:
       - arm64
       - arm
 
-  - id: beszel-agent
-    binary: beszel-agent
+  - id: serversentry-agent
+    binary: serversentry-agent
     main: cmd/agent/agent.go
     env:
       - CGO_ENABLED=0
@@ -52,10 +52,10 @@ builds:
         goarch: riscv64
 
 archives:
-  - id: beszel-agent
+  - id: serversentry-agent
     formats: [tar.gz]
     builds:
-      - beszel-agent
+      - serversentry-agent
     name_template: >-
       {{ .Binary }}_
       {{- .Os }}_
@@ -64,21 +64,21 @@ archives:
       - goos: windows
         formats: [zip]
 
-  - id: beszel
+  - id: serversentry
     formats: [tar.gz]
     builds:
-      - beszel
+      - serversentry
     name_template: >-
       {{ .Binary }}_
       {{- .Os }}_
       {{- .Arch }}
 
 nfpms:
-  - id: beszel-agent
-    package_name: beszel-agent
+  - id: serversentry-agent
+    package_name: serversentry-agent
     description: |-
-      Agent for Beszel
-      Beszel is a lightweight server monitoring platform that includes Docker
+      Agent for ServerSentry
+      ServerSentry is a lightweight server monitoring platform that includes Docker
       statistics, historical data, and alert functions. It has a friendly web
       interface, simple configuration, and is ready to use out of the box.
       It supports automatic backup, multi-user, OAuth authentication, and
@@ -86,18 +86,18 @@ nfpms:
     maintainer: henrygd <hank@henrygd.me>
     section: net
     builds:
-      - beszel-agent
+      - serversentry-agent
     formats:
       - deb
     contents:
       - src: ../supplemental/debian/beszel-agent.service
-        dst: lib/systemd/system/beszel-agent.service
+        dst: lib/systemd/system/serversentry-agent.service
         packager: deb
       - src: ../supplemental/debian/copyright
-        dst: usr/share/doc/beszel-agent/copyright
+        dst: usr/share/doc/serversentry-agent/copyright
         packager: deb
       - src: ../supplemental/debian/lintian-overrides
-        dst: usr/share/lintian/overrides/beszel-agent
+        dst: usr/share/lintian/overrides/serversentry-agent
         packager: deb
     scripts:
       postinstall: ../supplemental/debian/postinstall.sh
@@ -114,25 +114,25 @@ nfpms:
         #config: ../supplemental/debian/config.sh
 
 scoops:
-  - ids: [beszel-agent]
-    name: beszel-agent
+  - ids: [serversentry-agent]
+    name: serversentry-agent
     repository:
       owner: henrygd
-      name: beszel-scoops
+      name: serversentry-scoops
     homepage: "https://beszel.dev"
-    description: "Agent for Beszel, a lightweight server monitoring platform."
+    description: "Agent for ServerSentry, a lightweight server monitoring platform."
     license: MIT
 
 # # Needs choco installed, so doesn't build on linux / default gh workflow :(
 # chocolateys:
-#   - title: Beszel Agent
-#     ids: [beszel-agent]
+#   - title: ServerSentry Agent
+#     ids: [serversentry-agent]
 #     package_source_url: https://github.com/henrygd/beszel-chocolatey
 #     owners: henrygd
 #     authors: henrygd
-#     summary: 'Agent for Beszel, a lightweight server monitoring platform.'
+#     summary: 'Agent for ServerSentry, a lightweight server monitoring platform.'
 #     description: |
-#       Beszel is a lightweight server monitoring platform that includes Docker statistics, historical data, and alert functions.
+#       ServerSentry is a lightweight server monitoring platform that includes Docker statistics, historical data, and alert functions.
 
 #       It has a friendly web interface, simple configuration, and is ready to use out of the box. It supports automatic backup, multi-user, OAuth authentication, and API access.
 #     license_url: https://github.com/henrygd/beszel/blob/main/LICENSE
@@ -147,28 +147,28 @@ scoops:
 #     release_notes: 'https://github.com/henrygd/beszel/releases/tag/v{{ .Version }}'
 
 brews:
-  - ids: [beszel-agent]
-    name: beszel-agent
+  - ids: [serversentry-agent]
+    name: serversentry-agent
     repository:
       owner: henrygd
-      name: homebrew-beszel
+      name: homebrew-serversentry
     homepage: "https://beszel.dev"
-    description: "Agent for Beszel, a lightweight server monitoring platform."
+    description: "Agent for ServerSentry, a lightweight server monitoring platform."
     license: MIT
     skip_upload: auto
     extra_install: |
-      (bin/"beszel-agent-launcher").write <<~EOS
+      (bin/"serversentry-agent-launcher").write <<~EOS
         #!/bin/bash
         set -a
         if [ -f "$HOME/.config/beszel/beszel-agent.env" ]; then
           source "$HOME/.config/beszel/beszel-agent.env"
         fi
         set +a
-        exec #{bin}/beszel-agent "$@"
+        exec #{bin}/serversentry-agent "$@"
       EOS
-      (bin/"beszel-agent-launcher").chmod 0755
+      (bin/"serversentry-agent-launcher").chmod 0755
     service: |
-      run ["#{bin}/beszel-agent-launcher"]
+      run ["#{bin}/serversentry-agent-launcher"]
       log_path "#{Dir.home}/.cache/beszel/beszel-agent.log"
       error_log_path "#{Dir.home}/.cache/beszel/beszel-agent.log"
       keep_alive true
@@ -176,9 +176,9 @@ brews:
       process_type :background
 
 winget:
-  - ids: [beszel-agent]
-    name: beszel-agent
-    package_identifier: henrygd.beszel-agent
+  - ids: [serversentry-agent]
+    name: serversentry-agent
+    package_identifier: henrygd.serversentry-agent
     publisher: henrygd
     license: MIT
     license_url: "https://github.com/henrygd/beszel/blob/main/LICENSE"
@@ -186,10 +186,10 @@ winget:
     homepage: "https://beszel.dev"
     release_notes_url: "https://github.com/henrygd/beszel/releases/tag/v{{ .Version }}"
     publisher_support_url: "https://github.com/henrygd/beszel/issues"
-    short_description: "Agent for Beszel, a lightweight server monitoring platform."
+    short_description: "Agent for ServerSentry, a lightweight server monitoring platform."
     skip_upload: auto
     description: |
-      Beszel is a lightweight server monitoring platform that includes Docker
+      ServerSentry is a lightweight server monitoring platform that includes Docker
       statistics, historical data, and alert functions. It has a friendly web
       interface, simple configuration, and is ready to use out of the box.
       It supports automatic backup, multi-user, OAuth authentication, and
@@ -200,8 +200,8 @@ winget:
       - self-hosted
     repository:
       owner: henrygd
-      name: beszel-winget
-      branch: henrygd.beszel-agent-{{ .Version }}
+      name: serversentry-winget
+      branch: henrygd.serversentry-agent-{{ .Version }}
       token: "{{ .Env.WINGET_TOKEN }}"
       # pull_request:
       #   enabled: true

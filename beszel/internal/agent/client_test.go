@@ -69,18 +69,18 @@ func TestNewWebSocketClient(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			// Set up environment
 			if tc.hubURL != "" {
-				os.Setenv("BESZEL_AGENT_HUB_URL", tc.hubURL)
+				os.Setenv("SERVERSENTRY_AGENT_HUB_URL", tc.hubURL)
 			} else {
-				os.Unsetenv("BESZEL_AGENT_HUB_URL")
+				os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
 			}
 			if tc.token != "" {
-				os.Setenv("BESZEL_AGENT_TOKEN", tc.token)
+				os.Setenv("SERVERSENTRY_AGENT_TOKEN", tc.token)
 			} else {
-				os.Unsetenv("BESZEL_AGENT_TOKEN")
+				os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 			}
 			defer func() {
-				os.Unsetenv("BESZEL_AGENT_HUB_URL")
-				os.Unsetenv("BESZEL_AGENT_TOKEN")
+				os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+				os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 			}()
 
 			client, err := newWebSocketClient(agent)
@@ -118,30 +118,30 @@ func TestWebSocketClient_GetOptions(t *testing.T) {
 			name:           "http to ws conversion",
 			inputURL:       "http://localhost:8080",
 			expectedScheme: "ws",
-			expectedPath:   "/api/beszel/agent-connect",
+			expectedPath:   "/api/serversentry/agent-connect",
 		},
 		{
 			name:           "https to wss conversion",
 			inputURL:       "https://hub.example.com",
 			expectedScheme: "wss",
-			expectedPath:   "/api/beszel/agent-connect",
+			expectedPath:   "/api/serversentry/agent-connect",
 		},
 		{
 			name:           "existing path preservation",
 			inputURL:       "http://localhost:8080/custom/path",
 			expectedScheme: "ws",
-			expectedPath:   "/custom/path/api/beszel/agent-connect",
+			expectedPath:   "/custom/path/api/serversentry/agent-connect",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Set up environment
-			os.Setenv("BESZEL_AGENT_HUB_URL", tc.inputURL)
-			os.Setenv("BESZEL_AGENT_TOKEN", "test-token")
+			os.Setenv("SERVERSENTRY_AGENT_HUB_URL", tc.inputURL)
+			os.Setenv("SERVERSENTRY_AGENT_TOKEN", "test-token")
 			defer func() {
-				os.Unsetenv("BESZEL_AGENT_HUB_URL")
-				os.Unsetenv("BESZEL_AGENT_TOKEN")
+				os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+				os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 			}()
 
 			client, err := newWebSocketClient(agent)
@@ -158,7 +158,7 @@ func TestWebSocketClient_GetOptions(t *testing.T) {
 
 			// Check headers
 			assert.Equal(t, "test-token", options.RequestHeader.Get("X-Token"))
-			assert.Equal(t, beszel.Version, options.RequestHeader.Get("X-Beszel"))
+			assert.Equal(t, beszel.Version, options.RequestHeader.Get("X-ServerSentry"))
 			assert.Contains(t, options.RequestHeader.Get("User-Agent"), "Mozilla/5.0")
 
 			// Test options caching
@@ -184,11 +184,11 @@ func TestWebSocketClient_VerifySignature(t *testing.T) {
 	require.NoError(t, err)
 
 	// Set up environment
-	os.Setenv("BESZEL_AGENT_HUB_URL", "http://localhost:8080")
-	os.Setenv("BESZEL_AGENT_TOKEN", "test-token")
+	os.Setenv("SERVERSENTRY_AGENT_HUB_URL", "http://localhost:8080")
+	os.Setenv("SERVERSENTRY_AGENT_TOKEN", "test-token")
 	defer func() {
-		os.Unsetenv("BESZEL_AGENT_HUB_URL")
-		os.Unsetenv("BESZEL_AGENT_TOKEN")
+		os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 	}()
 
 	client, err := newWebSocketClient(agent)
@@ -257,11 +257,11 @@ func TestWebSocketClient_HandleHubRequest(t *testing.T) {
 	agent := createTestAgent(t)
 
 	// Set up environment
-	os.Setenv("BESZEL_AGENT_HUB_URL", "http://localhost:8080")
-	os.Setenv("BESZEL_AGENT_TOKEN", "test-token")
+	os.Setenv("SERVERSENTRY_AGENT_HUB_URL", "http://localhost:8080")
+	os.Setenv("SERVERSENTRY_AGENT_TOKEN", "test-token")
 	defer func() {
-		os.Unsetenv("BESZEL_AGENT_HUB_URL")
-		os.Unsetenv("BESZEL_AGENT_TOKEN")
+		os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 	}()
 
 	client, err := newWebSocketClient(agent)
@@ -350,11 +350,11 @@ func TestWebSocketClient_Close(t *testing.T) {
 	agent := createTestAgent(t)
 
 	// Set up environment
-	os.Setenv("BESZEL_AGENT_HUB_URL", "http://localhost:8080")
-	os.Setenv("BESZEL_AGENT_TOKEN", "test-token")
+	os.Setenv("SERVERSENTRY_AGENT_HUB_URL", "http://localhost:8080")
+	os.Setenv("SERVERSENTRY_AGENT_TOKEN", "test-token")
 	defer func() {
-		os.Unsetenv("BESZEL_AGENT_HUB_URL")
-		os.Unsetenv("BESZEL_AGENT_TOKEN")
+		os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 	}()
 
 	client, err := newWebSocketClient(agent)
@@ -371,11 +371,11 @@ func TestWebSocketClient_ConnectRateLimit(t *testing.T) {
 	agent := createTestAgent(t)
 
 	// Set up environment
-	os.Setenv("BESZEL_AGENT_HUB_URL", "http://localhost:8080")
-	os.Setenv("BESZEL_AGENT_TOKEN", "test-token")
+	os.Setenv("SERVERSENTRY_AGENT_HUB_URL", "http://localhost:8080")
+	os.Setenv("SERVERSENTRY_AGENT_TOKEN", "test-token")
 	defer func() {
-		os.Unsetenv("BESZEL_AGENT_HUB_URL")
-		os.Unsetenv("BESZEL_AGENT_TOKEN")
+		os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 	}()
 
 	client, err := newWebSocketClient(agent)
@@ -393,9 +393,9 @@ func TestWebSocketClient_ConnectRateLimit(t *testing.T) {
 // TestGetToken tests the getToken function with various scenarios
 func TestGetToken(t *testing.T) {
 	unsetEnvVars := func() {
-		os.Unsetenv("BESZEL_AGENT_TOKEN")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 		os.Unsetenv("TOKEN")
-		os.Unsetenv("BESZEL_AGENT_TOKEN_FILE")
+		os.Unsetenv("SERVERSENTRY_AGENT_TOKEN_FILE")
 		os.Unsetenv("TOKEN_FILE")
 	}
 
@@ -412,13 +412,13 @@ func TestGetToken(t *testing.T) {
 		assert.Equal(t, expectedToken, token)
 	})
 
-	t.Run("token from BESZEL_AGENT_TOKEN environment variable", func(t *testing.T) {
+	t.Run("token from SERVERSENTRY_AGENT_TOKEN environment variable", func(t *testing.T) {
 		unsetEnvVars()
 
-		// Set BESZEL_AGENT_TOKEN env var (should take precedence)
-		expectedToken := "test-token-from-beszel-env"
-		os.Setenv("BESZEL_AGENT_TOKEN", expectedToken)
-		defer os.Unsetenv("BESZEL_AGENT_TOKEN")
+		// Set SERVERSENTRY_AGENT_TOKEN env var (should take precedence)
+		expectedToken := "test-token-from-serversentry-env"
+		os.Setenv("SERVERSENTRY_AGENT_TOKEN", expectedToken)
+		defer os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 
 		token, err := getToken()
 		assert.NoError(t, err)
@@ -447,11 +447,11 @@ func TestGetToken(t *testing.T) {
 		assert.Equal(t, expectedToken, token)
 	})
 
-	t.Run("token from BESZEL_AGENT_TOKEN_FILE", func(t *testing.T) {
+	t.Run("token from SERVERSENTRY_AGENT_TOKEN_FILE", func(t *testing.T) {
 		unsetEnvVars()
 
 		// Create a temporary token file
-		expectedToken := "test-token-from-beszel-file"
+		expectedToken := "test-token-from-serversentry-file"
 		tokenFile, err := os.CreateTemp("", "token-test-*.txt")
 		require.NoError(t, err)
 		defer os.Remove(tokenFile.Name())
@@ -460,9 +460,9 @@ func TestGetToken(t *testing.T) {
 		require.NoError(t, err)
 		tokenFile.Close()
 
-		// Set BESZEL_AGENT_TOKEN_FILE env var (should take precedence)
-		os.Setenv("BESZEL_AGENT_TOKEN_FILE", tokenFile.Name())
-		defer os.Unsetenv("BESZEL_AGENT_TOKEN_FILE")
+		// Set SERVERSENTRY_AGENT_TOKEN_FILE env var (should take precedence)
+		os.Setenv("SERVERSENTRY_AGENT_TOKEN_FILE", tokenFile.Name())
+		defer os.Unsetenv("SERVERSENTRY_AGENT_TOKEN_FILE")
 
 		token, err := getToken()
 		assert.NoError(t, err)

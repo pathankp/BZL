@@ -6,16 +6,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: es\n"
-"Project-Id-Version: beszel\n"
+"Project-Id-Version: serversentry\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2025-07-25 22:44\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: beszel\n"
+"X-Crowdin-Project: serversentry\n"
 "X-Crowdin-Project-ID: 733311\n"
 "X-Crowdin-Language: es-ES\n"
-"X-Crowdin-File: /main/beszel/site/src/locales/en/en.po\n"
+"X-Crowdin-File: /main/serversentry/site/src/locales/en/en.po\n"
 "X-Crowdin-File-ID: 16\n"
 
 #. placeholder {0}: Math.trunc(system.info?.u / 86400)
@@ -177,12 +177,12 @@ msgid "Bandwidth"
 msgstr "Ancho de banda"
 
 #: src/components/login/auth-form.tsx
-msgid "Beszel supports OpenID Connect and many OAuth2 authentication providers."
-msgstr "Beszel admite OpenID Connect y muchos proveedores de autenticación OAuth2."
+msgid "ServerSentry supports OpenID Connect and many OAuth2 authentication providers."
+msgstr "ServerSentry admite OpenID Connect y muchos proveedores de autenticación OAuth2."
 
 #: src/components/routes/settings/notifications.tsx
-msgid "Beszel uses <0>Shoutrrr</0> to integrate with popular notification services."
-msgstr "Beszel utiliza <0>Shoutrrr</0> para integrarse con servicios populares de notificación."
+msgid "ServerSentry uses <0>Shoutrrr</0> to integrate with popular notification services."
+msgstr "ServerSentry utiliza <0>Shoutrrr</0> para integrarse con servicios populares de notificación."
 
 #: src/components/add-system.tsx
 msgid "Binary"
@@ -394,7 +394,7 @@ msgstr "Uso de Memoria de Docker"
 
 #: src/components/routes/system.tsx
 msgid "Docker Network I/O"
-msgstr "E/S de Red de Docker"
+msgstr "E/S de Rede de Docker"
 
 #: src/components/command-palette.tsx
 msgid "Documentation"

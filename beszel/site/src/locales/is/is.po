@@ -6,16 +6,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: is\n"
-"Project-Id-Version: beszel\n"
+"Project-Id-Version: serversentry\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2025-07-25 22:44\n"
 "Last-Translator: \n"
 "Language-Team: Icelandic\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: beszel\n"
+"X-Crowdin-Project: serversentry\n"
 "X-Crowdin-Project-ID: 733311\n"
 "X-Crowdin-Language: is\n"
-"X-Crowdin-File: /main/beszel/site/src/locales/en/en.po\n"
+"X-Crowdin-File: /main/serversentry/site/src/locales/en/en.po\n"
 "X-Crowdin-File-ID: 16\n"
 
 #. placeholder {0}: Math.trunc(system.info?.u / 86400)
@@ -177,12 +177,12 @@ msgid "Bandwidth"
 msgstr "Gangnaflutningsgeta"
 
 #: src/components/login/auth-form.tsx
-msgid "Beszel supports OpenID Connect and many OAuth2 authentication providers."
-msgstr "Beszel styður OpenID Connect og margar OAuth2 auðkenningarveitendur."
+msgid "ServerSentry supports OpenID Connect and many OAuth2 authentication providers."
+msgstr "ServerSentry styður OpenID Connect og margar OAuth2 auðkenningarveitendur."
 
 #: src/components/routes/settings/notifications.tsx
-msgid "Beszel uses <0>Shoutrrr</0> to integrate with popular notification services."
-msgstr "Beszel notar <0>Shoutrrr</0> til að tengjast vinsælum tilkynningaþjónustum."
+msgid "ServerSentry uses <0>Shoutrrr</0> to integrate with popular notification services."
+msgstr "ServerSentry notar <0>Shoutrrr</0> til að tengjast vinsælum tilkynningaþjónustum."
 
 #: src/components/add-system.tsx
 msgid "Binary"

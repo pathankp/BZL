@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pocketbase/pocketbase/core"
+	"github.comcom/pocketbase/pocketbase/core"
 	pbtests "github.com/pocketbase/pocketbase/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -76,7 +76,7 @@ func TestValidateAgentHeaders(t *testing.T) {
 			name: "valid headers",
 			headers: http.Header{
 				"X-Token":  []string{"valid-token-123"},
-				"X-Beszel": []string{"0.5.0"},
+				"X-ServerSentry": []string{"0.5.0"},
 			},
 			expectError:   false,
 			expectedToken: "valid-token-123",
@@ -85,7 +85,7 @@ func TestValidateAgentHeaders(t *testing.T) {
 		{
 			name: "missing token",
 			headers: http.Header{
-				"X-Beszel": []string{"0.5.0"},
+				"X-ServerSentry": []string{"0.5.0"},
 			},
 			expectError: true,
 		},
@@ -100,7 +100,7 @@ func TestValidateAgentHeaders(t *testing.T) {
 			name: "empty token",
 			headers: http.Header{
 				"X-Token":  []string{""},
-				"X-Beszel": []string{"0.5.0"},
+				"X-ServerSentry": []string{"0.5.0"},
 			},
 			expectError: true,
 		},
@@ -108,7 +108,7 @@ func TestValidateAgentHeaders(t *testing.T) {
 			name: "empty agent version",
 			headers: http.Header{
 				"X-Token":  []string{"valid-token-123"},
-				"X-Beszel": []string{""},
+				"X-ServerSentry": []string{""},
 			},
 			expectError: true,
 		},
@@ -116,7 +116,7 @@ func TestValidateAgentHeaders(t *testing.T) {
 			name: "token too long",
 			headers: http.Header{
 				"X-Token":  []string{strings.Repeat("a", 65)},
-				"X-Beszel": []string{"0.5.0"},
+				"X-ServerSentry": []string{"0.5.0"},
 			},
 			expectError: true,
 		},
@@ -533,7 +533,7 @@ func TestAgentConnect(t *testing.T) {
 		{
 			name: "missing token header",
 			headers: map[string]string{
-				"X-Beszel": "0.5.0",
+				"X-ServerSentry": "0.5.0",
 			},
 			expectedStatus: http.StatusBadRequest,
 			description:    "Should fail due to missing token",
@@ -552,7 +552,7 @@ func TestAgentConnect(t *testing.T) {
 			name: "invalid token",
 			headers: map[string]string{
 				"X-Token":  "invalid-token",
-				"X-Beszel": "0.5.0",
+				"X-ServerSentry": "0.5.0",
 			},
 			expectedStatus: http.StatusUnauthorized,
 			description:    "Should fail due to invalid token",
@@ -562,7 +562,7 @@ func TestAgentConnect(t *testing.T) {
 			name: "invalid agent version",
 			headers: map[string]string{
 				"X-Token":  testToken,
-				"X-Beszel": "0.5.0.0.0",
+				"X-ServerSentry": "0.5.0.0.0",
 			},
 			expectedStatus: http.StatusUnauthorized,
 			description:    "Should fail due to invalid agent version",
@@ -572,7 +572,7 @@ func TestAgentConnect(t *testing.T) {
 			name: "valid headers but websocket upgrade will fail in test",
 			headers: map[string]string{
 				"X-Token":  testToken,
-				"X-Beszel": "0.5.0",
+				"X-ServerSentry": "0.5.0",
 			},
 			expectedStatus: http.StatusInternalServerError,
 			description:    "Should pass validation but fail at WebSocket upgrade due to test limitations",
@@ -580,7 +580,7 @@ func TestAgentConnect(t *testing.T) {
 		},
 		{
 			name:           "Token too long",
-			headers:        map[string]string{"X-Token": strings.Repeat("a", 65), "X-Beszel": "0.5.0"},
+			headers:        map[string]string{"X-Token": strings.Repeat("a", 65), "X-ServerSentry": "0.5.0"},
 			expectedStatus: http.StatusBadRequest,
 			description:    "Should reject token exceeding 64 characters",
 			errorMessage:   "",
@@ -589,7 +589,7 @@ func TestAgentConnect(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			req := httptest.NewRequest("GET", "/api/beszel/agent-connect", nil)
+			req := httptest.NewRequest("GET", "/api/serversentry/agent-connect", nil)
 			for key, value := range tc.headers {
 				req.Header.Set(key, value)
 			}
@@ -694,7 +694,7 @@ func TestHandleAgentConnect(t *testing.T) {
 			method: "GET",
 			headers: map[string]string{
 				"X-Token":  "invalid",
-				"X-Beszel": "0.5.0",
+				"X-ServerSentry": "0.5.0",
 			},
 			expectedStatus: http.StatusUnauthorized,
 			description:    "Should reject invalid token",
@@ -704,7 +704,7 @@ func TestHandleAgentConnect(t *testing.T) {
 			method: "GET",
 			headers: map[string]string{
 				"X-Token":  testToken,
-				"X-Beszel": "0.5.0",
+				"X-ServerSentry": "0.5.0",
 			},
 			expectedStatus: http.StatusInternalServerError, // WebSocket upgrade fails in test
 			description:    "Should pass validation but fail at WebSocket upgrade",
@@ -713,7 +713,7 @@ func TestHandleAgentConnect(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			req := httptest.NewRequest(tc.method, "/api/beszel/agent-connect", nil)
+			req := httptest.NewRequest(tc.method, "/api/serversentry/agent-connect", nil)
 			for key, value := range tc.headers {
 				req.Header.Set(key, value)
 			}
@@ -755,7 +755,7 @@ func TestAgentWebSocketIntegration(t *testing.T) {
 
 	// Create HTTP server with the actual API route
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/api/beszel/agent-connect" {
+		if r.URL.Path == "/api/serversentry/agent-connect" {
 			acr := &agentConnectRequest{
 				hub: hub,
 				req: r,
@@ -876,11 +876,11 @@ func TestAgentWebSocketIntegration(t *testing.T) {
 			require.NoError(t, err)
 
 			// Set up environment variables for the agent
-			os.Setenv("BESZEL_AGENT_HUB_URL", ts.URL)
-			os.Setenv("BESZEL_AGENT_TOKEN", tc.agentToken)
+			os.Setenv("SERVERSENTRY_AGENT_HUB_URL", ts.URL)
+			os.Setenv("SERVERSENTRY_AGENT_TOKEN", tc.agentToken)
 			defer func() {
-				os.Unsetenv("BESZEL_AGENT_HUB_URL")
-				os.Unsetenv("BESZEL_AGENT_TOKEN")
+				os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+				os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 			}()
 
 			// Start agent in background
@@ -992,7 +992,7 @@ func TestMultipleSystemsWithSameUniversalToken(t *testing.T) {
 
 	// Create HTTP server with the actual API route
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/api/beszel/agent-connect" {
+		if r.URL.Path == "/api/serversentry/agent-connect" {
 			acr := &agentConnectRequest{
 				hub: hub,
 				req: r,
@@ -1057,11 +1057,11 @@ func TestMultipleSystemsWithSameUniversalToken(t *testing.T) {
 			require.NoError(t, err)
 
 			// Set up environment variables for the agent
-			os.Setenv("BESZEL_AGENT_HUB_URL", ts.URL)
-			os.Setenv("BESZEL_AGENT_TOKEN", universalToken)
+			os.Setenv("SERVERSENTRY_AGENT_HUB_URL", ts.URL)
+			os.Setenv("SERVERSENTRY_AGENT_TOKEN", universalToken)
 			defer func() {
-				os.Unsetenv("BESZEL_AGENT_HUB_URL")
-				os.Unsetenv("BESZEL_AGENT_TOKEN")
+				os.Unsetenv("SERVERSENTRY_AGENT_HUB_URL")
+				os.Unsetenv("SERVERSENTRY_AGENT_TOKEN")
 			}()
 
 			// Count systems before connection
