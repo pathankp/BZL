@@ -1,4 +1,4 @@
-// Package site handles the Beszel frontend embedding.
+// Package site handles the ServerSentry frontend embedding.
 package site
 
 import (
