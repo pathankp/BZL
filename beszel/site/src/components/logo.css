@@ -1,0 +1,23 @@
+@keyframes slide-up-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo-text {
+  animation: slide-up-fade-in 1s ease-out;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .logo-text {
+    font-size: 2rem;
+  }
+}
