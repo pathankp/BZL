@@ -4,7 +4,7 @@ A short description of the pull request changes should go here and the sections 
 
 ## 📖 Documentation
 
-Add a link to the PR for [documentation](https://github.com/henrygd/beszel-docs) changes.
+Add a link to the PR for [documentation](https://github.com/nak-ventures/serversentry-docs) changes.
 
 ## 🪵 Changelog
 
