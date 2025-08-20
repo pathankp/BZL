@@ -137,7 +137,7 @@ export default function SystemDetail({ name }: { name: string }) {
 	const userSettings = $userSettings.get()
 
 	useEffect(() => {
-		document.title = `${name} / Beszel`
+		document.title = `${name} / ServerSentry`
 		return () => {
 			if (!persistChartTime.current) {
 				$chartTime.set($userSettings.get().chartTime)
