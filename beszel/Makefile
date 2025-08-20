@@ -39,7 +39,7 @@ build-dotnet-conditional:
 		echo "Building .NET executable for Windows..."; \
 		if command -v dotnet >/dev/null 2>&1; then \
 			rm -rf ./internal/agent/lhm/bin; \
-			dotnet build -c Release ./internal/agent/lhm/beszel_lhm.csproj; \
+			dotnet build -c Release ./internal/agent/lhm/serversentry_lhm.csproj; \
 		else \
 			echo "Error: dotnet not found. Install .NET SDK to build Windows agent."; \
 			exit 1; \
@@ -48,10 +48,10 @@ build-dotnet-conditional:
 
 # Update build-agent to include conditional .NET build
 build-agent: tidy build-dotnet-conditional
-	GOOS=$(OS) GOARCH=$(ARCH) go build -o ./build/beszel-agent_$(OS)_$(ARCH)$(EXE_EXT) -ldflags "-w -s" beszel/cmd/agent
+	GOOS=$(OS) GOARCH=$(ARCH) go build -o ./build/serversentry-agent_$(OS)_$(ARCH)$(EXE_EXT) -ldflags "-w -s" serversentry/cmd/agent
 
 build-hub: tidy $(if $(filter false,$(SKIP_WEB)),build-web-ui)
-	GOOS=$(OS) GOARCH=$(ARCH) go build -o ./build/beszel_$(OS)_$(ARCH)$(EXE_EXT) -ldflags "-w -s" beszel/cmd/hub
+	GOOS=$(OS) GOARCH=$(ARCH) go build -o ./build/serversentry_$(OS)_$(ARCH)$(EXE_EXT) -ldflags "-w -s" serversentry/cmd/hub
 
 build: build-agent build-hub
 
