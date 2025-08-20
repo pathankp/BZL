@@ -2,13 +2,13 @@
 package hub
 
 import (
-	"beszel"
-	"beszel/internal/alerts"
-	"beszel/internal/hub/config"
-	"beszel/internal/hub/systems"
-	"beszel/internal/records"
-	"beszel/internal/users"
-	"beszel/site"
+	"serversentry"
+	"serversentry/internal/alerts"
+	"serversentry/internal/hub/config"
+	"serversentry/internal/hub/systems"
+	"serversentry/internal/records"
+	"serversentry/internal/users"
+	"serversentry/site"
 	"crypto/ed25519"
 	"encoding/pem"
 	"fmt"
@@ -187,7 +187,7 @@ func (h *Hub) startServer(se *core.ServeEvent) error {
 		basePath := strings.TrimSuffix(parsedURL.Path, "/") + "/"
 		indexFile, _ := fs.ReadFile(site.DistDirFS, "index.html")
 		indexContent := strings.ReplaceAll(string(indexFile), "./", basePath)
-		indexContent = strings.Replace(indexContent, "{{V}}", beszel.Version, 1)
+		indexContent = strings.Replace(indexContent, "{{V}}", serversentry.Version, 1)
 		indexContent = strings.Replace(indexContent, "{{HUB_URL}}", h.appURL, 1)
 		// set up static asset serving
 		staticPaths := [2]string{"/static/", "/assets/"}
@@ -241,7 +241,7 @@ func (h *Hub) registerApiRoutes(se *core.ServeEvent) error {
 	})
 	// get public key and version
 	apiAuth.GET("/getkey", func(e *core.RequestEvent) error {
-		return e.JSON(http.StatusOK, map[string]string{"key": h.pubKey, "v": beszel.Version})
+		return e.JSON(http.StatusOK, map[string]string{"key": h.pubKey, "v": serversentry.Version})
 	})
 	// send test notification
 	apiAuth.POST("/test-notification", h.SendTestNotification)
