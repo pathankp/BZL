@@ -127,8 +127,8 @@ const SettingsNotificationsPage = ({ userSettings }: { userSettings: UserSetting
 						</h3>
 						<p className="text-sm text-muted-foreground leading-relaxed">
 							<Trans>
-								Beszel uses{" "}
-								<a href="https://beszel.dev/guide/notifications" target="_blank" className="link">
+								ServerSentry uses{" "}
+								<a href="https://serversentry.dev/guide/notifications" target="_blank" className="link">
 									Shoutrrr
 								</a>{" "}
 								to integrate with popular notification services.
@@ -178,7 +178,7 @@ const ShoutrrrUrlCard = ({ url, onUrlChange, onRemove }: ShoutrrrUrlCardProps) =
 
 	const sendTestNotification = async () => {
 		setIsLoading(true)
-		const res = await pb.send("/api/beszel/test-notification", { method: "POST", body: { url } })
+		const res = await pb.send("/api/serversentry/test-notification", { method: "POST", body: { url } })
 		if ("err" in res && !res.err) {
 			toast({
 				title: t`Test notification sent`,
