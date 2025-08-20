@@ -6,16 +6,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: zh\n"
-"Project-Id-Version: beszel\n"
+"Project-Id-Version: serversentry\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2025-07-25 22:44\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: beszel\n"
+"X-Crowdin-Project: serversentry\n"
 "X-Crowdin-Project-ID: 733311\n"
 "X-Crowdin-Language: zh-HK\n"
-"X-Crowdin-File: /main/beszel/site/src/locales/en/en.po\n"
+"X-Crowdin-File: /main/serversentry/site/src/locales/en/en.po\n"
 "X-Crowdin-File-ID: 16\n"
 
 #. placeholder {0}: Math.trunc(system.info?.u / 86400)
@@ -177,12 +177,12 @@ msgid "Bandwidth"
 msgstr "帶寬"
 
 #: src/components/login/auth-form.tsx
-msgid "Beszel supports OpenID Connect and many OAuth2 authentication providers."
-msgstr "Beszel支持OpenID Connect和許多OAuth2認證提供者。"
+msgid "ServerSentry supports OpenID Connect and many OAuth2 authentication providers."
+msgstr "ServerSentry支持OpenID Connect和許多OAuth2認證提供者。"
 
 #: src/components/routes/settings/notifications.tsx
-msgid "Beszel uses <0>Shoutrrr</0> to integrate with popular notification services."
-msgstr "Beszel 使用 <0>Shoutrrr</0> 與流行的通知服務集成。"
+msgid "ServerSentry uses <0>Shoutrrr</0> to integrate with popular notification services."
+msgstr "ServerSentry 使用 <0>Shoutrrr</0> 與流行的通知服務集成。"
 
 #: src/components/add-system.tsx
 msgid "Binary"

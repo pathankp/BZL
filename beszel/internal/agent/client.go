@@ -100,15 +100,15 @@ func (client *WebSocketClient) getOptions() *gws.ClientOption {
 	} else {
 		client.hubURL.Scheme = "ws"
 	}
-	client.hubURL.Path = path.Join(client.hubURL.Path, "api/beszel/agent-connect")
+	client.hubURL.Path = path.Join(client.hubURL.Path, "api/serversentry/agent-connect")
 
 	client.options = &gws.ClientOption{
 		Addr:      client.hubURL.String(),
 		TlsConfig: &tls.Config{InsecureSkipVerify: true},
 		RequestHeader: http.Header{
-			"User-Agent": []string{getUserAgent()},
-			"X-Token":    []string{client.token},
-			"X-Beszel":   []string{beszel.Version},
+			"User-Agent":     []string{getUserAgent()},
+			"X-Token":        []string{client.token},
+			"X-ServerSentry": []string{beszel.Version},
 		},
 	}
 	return client.options

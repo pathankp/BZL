@@ -7,7 +7,7 @@ body:
     id: component
     attributes:
       label: Component
-      description: Which part of Beszel is this about?
+      description: Which part of ServerSentry is this about?
       options:
         - Hub
         - Agent
