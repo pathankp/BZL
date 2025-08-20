@@ -95,7 +95,7 @@ export function UserAuthForm({
 						setErrors({ passwordConfirm: msg })
 						return
 					}
-					await pb.send("/api/beszel/create-user", {
+					await pb.send("/api/serversentry/create-user", {
 						method: "POST",
 						body: JSON.stringify({ email, password }),
 					})
@@ -310,13 +310,13 @@ export function UserAuthForm({
 						</DialogHeader>
 						<div className="text-primary/70 text-[0.95em] contents">
 							<p>
-								<Trans>Beszel supports OpenID Connect and many OAuth2 authentication providers.</Trans>
+								<Trans>ServerSentry supports OpenID Connect and many OAuth2 authentication providers.</Trans>
 							</p>
 							<p>
 								<Trans>
 									Please see{" "}
 									<a
-										href="https://beszel.dev/guide/oauth"
+										href="https://serversentry.dev/guide/oauth"
 										className={cn(buttonVariants({ variant: "link" }), "p-0 h-auto")}
 									>
 										the documentation
