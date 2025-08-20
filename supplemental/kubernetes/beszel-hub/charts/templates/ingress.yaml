@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "beszel.fullname" . }}
+  name: {{ include "serversentry.fullname" . }}
   labels:
-    {{- include "beszel.labels" . | nindent 4 }}
+    {{- include "serversentry.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
