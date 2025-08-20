@@ -1,9 +1,9 @@
 package main
 
 import (
-	"beszel"
-	"beszel/internal/hub"
-	_ "beszel/migrations"
+	"serversentry"
+	"serversentry/internal/hub"
+	_ "serversentry/migrations"
 	"fmt"
 	"log"
 	"net/http"
@@ -38,16 +38,16 @@ func getBaseApp() *pocketbase.PocketBase {
 	isDev := os.Getenv("ENV") == "dev"
 
 	baseApp := pocketbase.NewWithConfig(pocketbase.Config{
-		DefaultDataDir: beszel.AppName + "_data",
+		DefaultDataDir: serversentry.AppName + "_data",
 		DefaultDev:     isDev,
 	})
-	baseApp.RootCmd.Version = beszel.Version
-	baseApp.RootCmd.Use = beszel.AppName
+	baseApp.RootCmd.Version = serversentry.Version
+	baseApp.RootCmd.Use = serversentry.AppName
 	baseApp.RootCmd.Short = ""
 	// add update command
 	baseApp.RootCmd.AddCommand(&cobra.Command{
 		Use:   "update",
-		Short: "Update " + beszel.AppName + " to the latest version",
+		Short: "Update " + serversentry.AppName + " to the latest version",
 		Run:   hub.Update,
 	})
 	// add health command
