@@ -82,7 +82,7 @@ export default function SettingsLayout() {
 	const page = useStore($router)
 
 	useEffect(() => {
-		document.title = t`Settings` + " / Beszel"
+		document.title = t`Settings` + " / ServerSentry"
 		// @ts-ignore redirect to account page if no page is specified
 		if (!page?.params?.name) {
 			redirectPage($router, "settings", { name: "general" })
